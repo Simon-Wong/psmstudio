@@ -1,3 +1,4 @@
 [submodule "service/sound/third/index_tts"]
 	path = service/sound/third/index_tts
 	url = https://github.com/index-tts/index-tts.git
+	ignore = dirty
