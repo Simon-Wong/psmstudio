@@ -5,3 +5,4 @@
 [submodule "service/video/third/wan2.2"]
 	path = service/video/third/wan2.2
 	url = git@github.com:Wan-Video/Wan2.2.git
+	ignore = dirty
