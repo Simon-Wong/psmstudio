@@ -1,8 +1,8 @@
-# service_sound
+# sound
 
-repo_src是index-tts的代码
+third/index_tts是index-tts的代码
 
-srv是封装index-tts的本地web api简易服务
+wrapper/index_tts/api_index_tts是封装的index-tts本地api，源于index-tts的web服务
 
 
 
