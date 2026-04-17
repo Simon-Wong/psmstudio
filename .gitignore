@@ -1,3 +1,4 @@
 service/sound/wrapper/index_tts/demo_voice.mp3
 temp/
 *.pyc
+*.wav
