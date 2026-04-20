@@ -2,6 +2,10 @@
 
 Persional Sound and Movie Studio
 
+```
+git clone git@github.com:Simon-Wong/psmstudio.git
+```
+
 ## 环境
 
 wsl2 ubuntu24.04
@@ -28,9 +32,9 @@ GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --recursive
 
 index_tts：个人感觉在Windows上部署方便
 
+wan2.2：个人感觉在wsl上部署方便
 
-
-### 声音
+### Sound
 
 #### service/sound/third/index_tts
 
@@ -48,6 +52,9 @@ cd D:\testGit\psmstudio\service\sound\third\index_tts
 
 conda create -n envTools python=3.12
 conda activate envTools
+
+pip uninstall torch torchvision torchaudio
+conda uninstall pytorch torchvision torchaudio
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 
 pip install -U uv
@@ -134,3 +141,81 @@ if __name__ == "__main__":
     demo.queue(20)
     demo.launch(server_name=cmd_args.host, server_port=cmd_args.port,show_error=True)
 ```
+
+### Video
+
+#### service/video/third/wan2.2
+
+子模块，来自开源项目https://github.com/Wan-Video/Wan2.2
+
+根据Wan2.2的要求配置好后，应能独立运行。
+
+这个用wsl ubuntu24.04跑。（虽然我在Windows上成功的编译了flash_attention，但是还有triton等要处理）
+
+##### 专用环境
+
+```
+cd /home/thbytwo/testGit/psmstudio/service/video/third/wan2.2
+
+conda create -n envWan2_2 python=3.10 -y
+
+conda activate envWan2_2
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
+
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt update
+sudo apt install -y cuda-toolkit-13-0
+
+pip install psutil
+pip install -r requirements.txt --no-build-isolation -vvv
+pip install -r requirements_s2v.txt 
+pip install ninja
+pip install sam2 --no-build-isolation --extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
+#注释掉requirements_animate里的sam2
+pip install -r requirements_animate.txt --no-build-isolation -vvv
+```
+
+##### 下载模型
+
+```
+modelscope download --model Wan-AI/Wan2.2-TI2V-5B --local_dir /mnt/d/modelscope_stuff/Wan2.2-TI2V-5B
+```
+
+##### 测试
+
+```
+python generate.py --task ti2v-5B --size 1280*704 --frame_num=29 --ckpt_dir /mnt/d/modelscope_stuff/Wan2.2-TI2V-5B --offload_model True --convert_model_dtype --t5_cpu --prompt "Two anthropomorphic cats in comfy boxing gear and bright gloves fight intensely on a spotlighted stage" --save_file "/home/thbytwo/testGit/psmstudio/testwan22-2.mp4"
+```
+
+##### 可能遇到的报错
+
+###### killed
+
+如果遇到“killed”，可以用下面的命令看原因。
+
+```
+dmesg -T | grep -i "killed process"
+```
+
+一般来讲是内存爆了。修改参数，降低质量。分别是：分辨率、帧数、采样。
+
+```
+--size 1280*704 --frame_num 24 --sample_steps 5
+```
+
+或者用WSL Settings修改配置。例如内存改成20480
+
+###### CUDA版本不匹配
+
+需要根据具体的显卡重新研究配置环境。
+
+```
+# 检查PyTorch版本和CUDA可用性
+python -c "import torch; print(f'PyTorch版本: {torch.__version__}'); print(f'CUDA可用: {torch.cuda.is_available()}'); print(f'CUDA版本: {torch.version.cuda}'); print(f'GPU型号: {torch.cuda.get_device_name(0)}')"
+
+# 检查NVIDIA驱动版本
+nvidia-smi
+```
+
+
