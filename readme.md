@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
 ### Video
 
-#### service/video/third/wan2.2
+#### service/video/third/wan2_2
 
 子模块，来自开源项目https://github.com/Wan-Video/Wan2.2
 
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 ##### 专用环境
 
 ```
-cd /home/thbytwo/testGit/psmstudio/service/video/third/wan2.2
+cd /home/thbytwo/testGit/psmstudio/service/video/third/wan2_2
 
 conda create -n envWan2_2 python=3.10 -y
 
