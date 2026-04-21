@@ -179,7 +179,10 @@ pip install -r requirements_animate.txt --no-build-isolation -vvv
 ##### 下载模型
 
 ```
+export HF_ENDPOINT=https://hf-mirror.com
+export MODELSCOPE_ENDPOINT=https://mirrors.aliyun.com/modelscope/
 modelscope download --model Wan-AI/Wan2.2-TI2V-5B --local_dir /mnt/d/modelscope_stuff/Wan2.2-TI2V-5B
+modelscope download --model Wan-AI/Wan2.2-TI2V-5B-Diffusers --local_dir /mnt/d/modelscope_stuff/Wan2.2-TI2V-5B-Diffusers
 ```
 
 ##### 测试
